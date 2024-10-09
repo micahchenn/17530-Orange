@@ -1,23 +1,35 @@
 import React from 'react';
 import "./App.css";
+import {useState} from 'react';
 
-function App() {
+export default function App(){ 
+
+  const [userInput, setUserInput] = useState('');
+  
+  const [passInput, setPassInput] = useState('');
+
+  let userChange = (event) => {
+    setUserInput(event.target.value);
+  }
+
+  let passChange = (event) => {
+    setPassInput(event.target.value);
+  }
+
+  let submitForm = () => {
+    console.log("user: " + userInput + ", pass: " + passInput);
+  }
+
   return (
-    <div style={{"text-align" : "center"}}>
-      <form>
+    <div style={{"textAlign" : "center"}}>
+      <form onSubmit={submitForm}>
         <h1>Sign up</h1>      
-        <input type="text" placeholder="Username..."/>
+        <input type="text" value={userInput} onChange={userChange} placeholder="Username..."/>
         <br />
-        <input type="password" placeholder="Password..."/>
+        <input type="password" value={passInput} onChange={passChange} placeholder="Password..."/>
         <br />
-        <button onClick={displayMessage}>Sign Up</button>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );
 }
-
-function displayMessage() {
-  console.log("JavaScript is initialized!");
-}
-
-export default App;
