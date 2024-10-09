@@ -1,0 +1,24 @@
+* {
+    font-family : Arial;
+}
+
+body {
+    background-color: beige;
+}
+
+form {
+    margin: auto;
+    padding: 10px;
+    width: 50%;
+    border-radius: 10px;
+    background-color: bisque;
+}
+
+input {
+    margin-bottom: 10px;
+    width: 30%;
+}
+
+button {
+    width: 49%;
+}

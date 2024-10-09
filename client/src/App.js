@@ -1,10 +1,17 @@
 import React from 'react';
+import "./App.css";
 
 function App() {
   return (
-    <div>
-      <h1>Hello, World! This is TEAM ORANGE</h1>
-      <button onClick={displayMessage}>Click Me</button>
+    <div style={{"text-align" : "center"}}>
+      <form>
+        <h1>Sign up</h1>      
+        <input type="text" placeholder="Username..."/>
+        <br />
+        <input type="password" placeholder="Password..."/>
+        <br />
+        <button onClick={displayMessage}>Sign Up</button>
+      </form>
     </div>
   );
 }
