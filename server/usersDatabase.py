@@ -1,8 +1,5 @@
 # Import necessary libraries and modules
 from pymongo import MongoClient
-
-import projectsDB
-
 '''
 Structure of User entry:
 User = {
@@ -14,27 +11,50 @@ User = {
 '''
 
 # Function to add a new user
-def addUser(client, username, userId, password):
-    # Add a new user to the database
-    pass
+def addUser(users, username, userId, password):
+    user = __queryUser(users, username, userId)
+    if user is None:
+        users.insert_one({"username": username, "userId": userId, "password": password, "projects": []})
+        return "success"
+    return "already_exists"
+    
 
 # Helper function to query a user by username and userId
-def __queryUser(client, username, userId):
-    # Query and return a user from the database
-    pass
+def __queryUser(users, username, userId):
+    return users.find_one({"username": username, "userId": userId})
+
 
 # Function to log in a user
-def login(client, username, userId, password):
-    # Authenticate a user and return login status
-    pass
+def login(users, username, userId, password):
+    user = __queryUser(users, username, userId)
+    if user is None:
+        return "not_exists"
+    
+    return "wrong_pass" if user['password'] != password else "success"
+
 
 # Function to add a user to a project
-def joinProject(client, userId, projectId):
-    # Add a user to a specified project
-    pass
+def joinProject(webapp, userId, projectId):
+    user = webapp['Users'].find_one({"userId": userId})
+    project = webapp['Projects'].find_one({"projectId": projectId})
+
+    if user is None:
+        return "invalid_user"
+
+    if project is None:
+        return "invalid project"
+
+    if projectId in user['projects']:
+        return "already_exists"
+    
+    user['projects'].append(projectId)
+    project['projectId'].append(userId)
+    return "success"
+
 
 # Function to get the list of projects for a user
-def getUserProjectsList(client, userId):
-    # Get and return the list of projects a user is part of
-    pass
+def getUserProjectsList(users, userId):
+    user = users.find_one({"userId": userId})
+    return "invalid_user" if user is None else user['projects']
+
 
