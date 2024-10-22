@@ -1,8 +1,9 @@
 # Import necessary libraries and modules
 from bson.objectid import ObjectId
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, session
 from pymongo import MongoClient
 from flask_cors import CORS
+import json
 
 import usersDatabase as udb
 import hardwareDatabase as hwdb
@@ -19,6 +20,7 @@ hardware = webapp['Hardware']
 # Initialize a new Flask web application
 app = Flask(__name__)
 CORS(app)
+app.secret_key = 'my_secret'
 # Route for user login
 @app.route('/login', methods=['POST'])
 def login():
@@ -29,23 +31,22 @@ def login():
     password = data['password']
     isLogin = data['isLogin']
     res = udb.login(users, username, userId, password) if isLogin == 1 else udb.addUser(users, username, userId, password)
+    session['username'] = username
+    session['userId'] = userId
     
     # Return a JSON response
     return jsonify({"res": res})
 
 # Route for the main page (Work in progress)
+# this is for showing projects
 @app.route('/main')
 def mainPage():
-    # Extract data from request
+    user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
 
-    # Connect to MongoDB
-
-    # Fetch user projects using the usersDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
+    # remove _id field, since it's useless and not serializable with jsonify
+    res = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
+    print(res)
+    return jsonify({'res': res})
 
 # Route for joining a project
 @app.route('/join_project', methods=['POST'])

@@ -97,5 +97,3 @@ def checkInHW(webapp, projectId, hwSetName, qty):
     project['hwSets'][hwSetName] -= qty
     hw['availability'] += qty
     return updateUsage(webapp, projectId, hwSetName)
-
-
