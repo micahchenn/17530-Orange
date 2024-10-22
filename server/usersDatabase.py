@@ -48,7 +48,7 @@ def joinProject(webapp, userId, projectId):
         return "already_exists"
     
     user['projects'].append(projectId)
-    project['projectId'].append(userId)
+    project['users'].append(userId)
     return "success"
 
 
