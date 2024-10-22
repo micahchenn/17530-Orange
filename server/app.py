@@ -1,6 +1,6 @@
 # Import necessary libraries and modules
 from bson.objectid import ObjectId
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import Flask, request, jsonify, send_from_directory
 from pymongo import MongoClient
 from flask_cors import CORS
 
@@ -29,9 +29,6 @@ def login():
     password = data['password']
     isLogin = data['isLogin']
     res = udb.login(users, username, userId, password) if isLogin == 1 else udb.addUser(users, username, userId, password)
-
-    if res == "success":
-        return redirect(url_for('mainPage'))
     
     # Return a JSON response
     return jsonify({"res": res})
