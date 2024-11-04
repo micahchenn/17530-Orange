@@ -26,13 +26,12 @@ app.secret_key = 'my_secret'
 def login():
     # Extract data from request
     data = request.json
-    userId = data['username']
-    username = data['userId']
+    username = data['username']
+    userId = data['userId']
     password = data['password']
     isLogin = data['isLogin']
     res = udb.login(users, username, userId, password) if isLogin == 1 else udb.addUser(users, username, userId, password)
     session['username'] = username
-    session['userId'] = userId
     
     # Return a JSON response
     return jsonify({"res": res})
