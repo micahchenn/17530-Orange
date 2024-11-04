@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import "./login.css";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 
 const Login = () => {
 
@@ -28,13 +30,13 @@ const Login = () => {
     <div style={{ "textAlign": "center" }}>
       <form onSubmit={submitForm}>
         <h1>Sign up / Login</h1>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username..." />
+        <TextField variant="standard" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username..." />
         <br />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password..." />
+        <TextField variant="standard" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password..." />
         <br />
-        <button type="submit" onClick={() => (isLogin = 0)}>Sign Up</button>
+        <Button variant="filled" type="submit" onClick={() => (isLogin = 0)}>Sign Up</Button>
         <br />
-        <button type="submit" onClick={() => (isLogin = 1)}>Login</button>
+        <Button variant="filled" type="submit" onClick={() => (isLogin = 1)}>Login</Button>
       </form>
       <p>{err}</p>
     </div>
