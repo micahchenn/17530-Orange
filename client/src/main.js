@@ -49,23 +49,36 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
 function Main() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+      axios.get('/main').then((res) => {
+          //console.log("ressssss");
+          console.log(res)
+          setData(res.data.res);
+      })
+  }, []);
+
   return (
     <div className="App">
-      <Projects />
+      <Projects data={data}/>
     </div>
   );
 }
 
-const Projects = () =>{
-  return(
-      <>
-          <h2>Projects</h2>
-          <ProjectInfo pname="Project Name 1" list="Andy, Bart, Colin"/>
-          <ProjectInfo pname="Project Name 2" list="Darryl, Edward"/>
-          <ProjectInfo pname="Project Name 3" list="Fred, Gary, Harry, Ignacio"/>
-      </>
+const Projects = ({ data }) => {
+  return (
+    <>
+      <h2>Projects</h2>
+      {data.map((project, index) => (
+        <React.Fragment key={index}>
+          <ProjectInfo pname={project.projectName} list={project.users} />
+        </React.Fragment>
+      ))}
+    </>
   );
-}
+};
+
 
 
 const ProjectInfo = ({pname, list}) =>{
@@ -77,10 +90,10 @@ const ProjectInfo = ({pname, list}) =>{
             <UserList list={list}/>  
           </div>
           <div className="list">
-            <ItemManipulation projname="HWSet1" available="0" capacity="100" />  
+            <ItemManipulation name="HWSet1" available="0" capacity="100" />  
           </div>
           <div className="list">
-            <ItemManipulation projname="HWSet2" available="50" capacity="100"/>  
+            <ItemManipulation name="HWSet2" available="50" capacity="100"/>  
           </div>
           <div className="list">
             <JoinOrLeave />  
@@ -90,10 +103,10 @@ const ProjectInfo = ({pname, list}) =>{
   );
 }
 
-const ItemManipulation = ({projname, available, capacity}) =>{
+const ItemManipulation = ({name, available, capacity}) =>{
     return(
         <>
-            <h6>{projname}: {available}/{capacity}</h6>
+            <h6>{name}: {available}/{capacity}</h6>
             <div className="formsec">
                 <TextField label="qty" variant="outlined" />
             </div>      
@@ -122,7 +135,7 @@ const JoinOrLeave = () =>{
 const UserList = ({list}) =>{
   return(
       <>
-          <h4>{list}</h4>
+          <h4>{list.join(", ")}</h4>
       </>
   );
 }

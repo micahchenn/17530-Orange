@@ -1,6 +1,6 @@
 # Import necessary libraries and modules
 from bson.objectid import ObjectId
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
 from flask_cors import CORS
 import json
@@ -31,7 +31,8 @@ def login():
     password = data['password']
     isLogin = data['isLogin']
     res = udb.login(users, username, userId, password) if isLogin == 1 else udb.addUser(users, username, userId, password)
-    session['username'] = username
+    session['userId'] = userId
+    print(session)
     
     # Return a JSON response
     return jsonify({"res": res})
@@ -40,8 +41,11 @@ def login():
 # this is for showing projects
 @app.route('/main')
 def mainPage():
+    print(session)
+    if 'userId' not in session:
+        return redirect(url_for('login'))
     user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
-
+    
     # remove _id field, since it's useless and not serializable with jsonify
     res = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
     print(res)
