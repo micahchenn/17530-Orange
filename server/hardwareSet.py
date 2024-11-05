@@ -1,3 +1,4 @@
+# Class for hardware set
 class hardwareSet:
     def __init__(self):
         self.__capacity = 0
