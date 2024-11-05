@@ -17,7 +17,7 @@ const Login = () => {
   const submitForm = async (e) => {
     e.preventDefault();
     let userId = username;
-    const response = await axios.post('/login', { username, userId, password, isLogin });
+    const response = await axios.post('https://one7530-orange.onrender.com/login', { username, userId, password, isLogin });
     setErr(response.data.res);
     console.log(response);
     if (response.data.res == "success") {
