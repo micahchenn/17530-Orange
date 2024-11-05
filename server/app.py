@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from flask import Flask, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
 from flask_cors import CORS
+import os
 import json
 
 import usersDatabase as udb
@@ -210,6 +211,10 @@ def testing():
         'last_name': 'Srinivasan'
     }
 
+
+
+
+
 if __name__ == "__main__":
     
     # config = configparser.ConfigParser()
@@ -218,4 +223,22 @@ if __name__ == "__main__":
     # app.config['MONGO_URI'] = config['PROD']['DB_URI']
 
     app.run()
+
+
+
+'''
+if __name__ == "__main__":
+    
+    # config = configparser.ConfigParser()
+    # config.read(os.path.abspath(os.path.join("server/.ini")))
+    # app.config['DEBUG'] = True
+    # app.config['MONGO_URI'] = config['PROD']['DB_URI']
+
+    app.run()
+
+'''
+
+
+
+
 
