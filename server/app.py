@@ -53,8 +53,9 @@ def mainPage():
     return jsonify({'res': res})
 
 # Route for joining a project
-@app.route('/join_project', methods=['POST'])
-def join_project():
+@app.route('/joinProject/<projectid>', methods=['POST'])
+def join_project(projectid):
+    return jsonify({"pid": f"{projectid}"})
     # Extract data from request
 
     # Connect to MongoDB
@@ -65,6 +66,11 @@ def join_project():
 
     # Return a JSON response
     return jsonify({})
+
+@app.route('/leaveProject/<projectid>', methods=['GET'])
+def leaveProject(projectid):
+    return jsonify({"pid": f"{projectid}"})
+
 
 # Route for adding a new user
 @app.route('/add_user', methods=['POST'])
@@ -95,8 +101,8 @@ def get_user_projects_list():
     return jsonify({})
 
 # Route for creating a new project
-@app.route('/create_project', methods=['POST'])
-def create_project():
+@app.route('/create_project/<pid>', methods=['POST'])
+def create_project(pid):
     # Extract data from request
 
     # Connect to MongoDB
@@ -106,7 +112,8 @@ def create_project():
     # Close the MongoDB connection
 
     # Return a JSON response
-    return jsonify({})
+    return jsonify({"pid": f"{pid}"})
+
 
 # Route for getting project information
 @app.route('/get_project_info', methods=['POST'])
@@ -149,8 +156,9 @@ def get_hw_info():
     return jsonify({})
 
 # Route for checking out hardware
-@app.route('/check_out', methods=['POST'])
-def check_out():
+@app.route('/checkOut_hardware/<projectId>/<qty>', methods=['POST'])
+def check_out(projectId, qty):
+    return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
     # Extract data from request
 
     # Connect to MongoDB
@@ -163,8 +171,9 @@ def check_out():
     return jsonify({})
 
 # Route for checking in hardware
-@app.route('/check_in', methods=['POST'])
-def check_in():
+@app.route('/checkIn_hardware/<projectId>/<qty>', methods=['POST'])
+def check_in(projectId, qty):
+    return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
     # Extract data from request
 
     # Connect to MongoDB

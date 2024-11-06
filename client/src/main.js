@@ -48,6 +48,37 @@ import "./main.css"
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
+const checkInHardware = async (projectId, qty) => {
+  const response = await fetch(`http://localhost:5000/checkIn_hardware/${projectId}/${qty}`);
+  const data = await response.json();
+  return (data.qty + " hardware checked in");
+};
+
+const checkOutHardware = async (projectId, qty) => {
+  const response = await fetch(`http://localhost:5000/checkOut_hardware/${projectId}/${qty}`);
+  const data = await response.json();
+  return (data.qty + " hardware checked out");
+};
+
+const joinProject = async (projectId) => {
+  const response = await fetch(`http://localhost:5000/joinProject/${projectId}`);
+  const data = await response.json();
+  return ("Joined project " + data.pid);
+};
+
+const leaveProject = async (projectId) => {
+  const response = await fetch(`http://localhost:5000/leaveProject/${projectId}`);
+  const data = await response.json();
+  return ("Left project " + data.pid);
+};
+
+const createProject = async (projectId) => {
+  const response = await fetch(`http://localhost:5000/create_project/${projectId}`);
+  const data = await response.json();
+  return ("Created project " + data.pid);
+};
+
+
 function Main() {
   const [data, setData] = useState([]);
 
@@ -61,18 +92,41 @@ function Main() {
 
   return (
     <div className="App">
-      <Projects data={data}/>
+      <CreateProject pm={makePopup}/>
+      <Projects data={data} pm={makePopup}/>
+      <Dialog open={open} onClose={handleClose}>
+        <p>{popupmessage}</p>
+        <Button onClick={handleClose}>
+          Close
+        </Button>
+      </Dialog>
     </div>
   );
 }
 
-const Projects = ({ data }) => {
+const CreateProject = ({pm}) => {
+  [pid, setPid] = useClass(0)
+
+  const handleClick = async () => {
+    ret = await createProject(pid);
+    pm(ret);
+  }
+  
+  return (
+    <>
+      <TextField label="id" variant="outlined" onChange={(e) => {try{setPid(parseInt(e.target.value));}catch(error){}}}/>
+      <Button variant="outlined" onClick={handleClick}>Create Project</Button>
+    </>
+  )
+}
+
+const Projects = ({ data, pm }) => {
   return (
     <>
       <h2>Projects</h2>
       {data.map((project, index) => (
         <React.Fragment key={index}>
-          <ProjectInfo pname={project.projectName} list={project.users} />
+          <ProjectInfo pname={project.projectName} list={project.users} pm={pm}/>
         </React.Fragment>
       ))}
     </>
@@ -81,7 +135,7 @@ const Projects = ({ data }) => {
 
 
 
-const ProjectInfo = ({pname, list}) =>{
+const ProjectInfo = ({pname, list, pm}) =>{
   return(
       <>
         <div className="listParent">    
@@ -90,38 +144,53 @@ const ProjectInfo = ({pname, list}) =>{
             <UserList list={list}/>  
           </div>
           <div className="list">
-            <ItemManipulation name="HWSet1" available="0" capacity="100" />  
+            <ItemManipulation name="HWSet1" available="0" capacity="100" pm={pm}/>  
           </div>
           <div className="list">
-            <ItemManipulation name="HWSet2" available="50" capacity="100"/>  
+            <ItemManipulation name="HWSet2" available="50" capacity="100" pm={pm}/>  
           </div>
           <div className="list">
-            <JoinOrLeave />  
+            <JoinOrLeave pid={pname} pm={pm}/>  
           </div>
         </div>
       </>
   );
 }
 
-const ItemManipulation = ({name, available, capacity}) =>{
-    return(
-        <>
-            <h6>{name}: {available}/{capacity}</h6>
-            <div className="formsec">
-                <TextField label="qty" variant="outlined" />
-            </div>      
-            <div className="formsec">
-                <Button variant="outlined">Check In</Button>
-                <Button variant="outlined">Check Out</Button>
-            </div>
-        </>
-    );
+const ItemManipulation = ({projname, hname, available, capacity, pm}) =>{
+  const [qty, setQty] = useState(0);
+  const [checked, setChecked] = useState(0);
+
+  const handleCheckIn = async () => {
+    const message = await checkInHardware(projname, qty);
+    pm(message);
+    setChecked(checked - qty);
+  };
+  
+  const handleCheckOut = async () => {
+    const message = await checkOutHardware(projname, qty);
+    pm(message);
+    setChecked(checked + qty);
+  };
+
+  return(
+      <>
+          <h6>{hname}: {checked}/{capacity}</h6>
+          <TextField label="qty" variant="outlined" onChange={(e) => {try{setQty(parseInt(e.target.value));}catch(error){}}}/>
+          <Button variant="outlined" onClick={handleCheckIn}>Check In</Button>
+          <Button variant="outlined" onClick={handleCheckOut}>Check Out</Button>
+      </>
+  );
 }
 
-const JoinOrLeave = () =>{
+const JoinOrLeave = ({pm, pid}) =>{
   const [bool, setbool] = useState(false);
-  const handleClick = () => {
-    setbool(bool^true)
+  const handleClick = async () => {
+    let ret = "";
+    if(bool) ret = await joinProject(pid);
+    else ret = await leaveProject(pid);
+    setbool(bool^true);
+    pm(ret);
   }
   return(
       <>
