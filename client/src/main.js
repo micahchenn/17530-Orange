@@ -47,35 +47,37 @@ import axios from 'axios'
 import "./main.css"
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import Dialog from '@mui/material/Dialog';
 
-const domain = "https://one7530-orange.onrender.com";
+
+const domain = `https://localhost:5000`;
 
 const checkInHardware = async (projectId, qty) => {
-  const response = await fetch(domain + `/checkIn_hardware/${projectId}/${qty}`);
+  const response = await fetch(`http://localhost:5000/checkIn_hardware/${projectId}/${qty}`);
   const data = await response.json();
   return (data.qty + " hardware checked in");
 };
 
 const checkOutHardware = async (projectId, qty) => {
-  const response = await fetch(domain + `/checkOut_hardware/${projectId}/${qty}`);
+  const response = await fetch(`http://localhost:5000/checkOut_hardware/${projectId}/${qty}`);
   const data = await response.json();
   return (data.qty + " hardware checked out");
 };
 
 const joinProject = async (projectId) => {
-  const response = await fetch(domain + `/joinProject/${projectId}`);
+  const response = await fetch(`http://localhost:5000/joinProject/${projectId}`);
   const data = await response.json();
   return ("Joined project " + data.pid);
 };
 
 const leaveProject = async (projectId) => {
-  const response = await fetch(domain + `/leaveProject/${projectId}`);
+  const response = await fetch(`http://localhost:5000/leaveProject/${projectId}`);
   const data = await response.json();
   return ("Left project " + data.pid);
 };
 
 const createProject = async (projectId) => {
-  const response = await fetch(domain + `/create_project/${projectId}`);
+  const response = await fetch(`http://localhost:5000/create_project/${projectId}`);
   const data = await response.json();
   return ("Created project " + data.pid);
 };
@@ -83,6 +85,17 @@ const createProject = async (projectId) => {
 
 function Main() {
   const [data, setData] = useState([]);
+  const [popupmessage, setPopupMessage] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const makePopup = (message) => {
+    setPopupMessage(message);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
       axios.get('/main').then((res) => {
@@ -106,23 +119,33 @@ function Main() {
   );
 }
 
-const CreateProject = ({pm}) => {
-  [pid, setPid] = useClass(0)
+const CreateProject = ({ pm }) => {
+  const [pid, setPid] = useState("");
 
   const handleClick = async () => {
-    ret = await createProject(pid);
+    const ret = await createProject(pid);
     pm(ret);
-  }
-  
+  };
+
   return (
-    <>
-      <div className="listParent">
-        <TextField label="id" variant="outlined" onChange={(e) => {try{setPid(parseInt(e.target.value));}catch(error){}}}/>
-        <Button variant="outlined" onClick={handleClick}>Create Project</Button>
-      </div>
-    </>
-  )
-}
+    <div className="listParent">
+      <TextField
+        label="id"
+        variant="outlined"
+        onChange={(e) => {
+          try {
+            setPid(parseInt(e.target.value));
+          } catch (error) {
+            console.error("Invalid input:", error);
+          }
+        }}
+      />
+      <Button variant="outlined" onClick={handleClick}>
+        Create Project
+      </Button>
+    </div>
+  );
+};
 
 const Projects = ({ data, pm }) => {
   return (
@@ -148,10 +171,10 @@ const ProjectInfo = ({pname, list, pm}) =>{
             <UserList list={list}/>  
           </div>
           <div className="list">
-            <ItemManipulation name="HWSet1" available="0" capacity="100" pm={pm}/>  
+            <ItemManipulation name="HWSet1" available="0" capacity="100" projname={pname} pm={pm}/>  
           </div>
           <div className="list">
-            <ItemManipulation name="HWSet2" available="50" capacity="100" pm={pm}/>  
+            <ItemManipulation name="HWSet2" available="50" capacity="100" projname={pname} pm={pm}/>  
           </div>
           <div className="list">
             <JoinOrLeave pid={pname} pm={pm}/>  
