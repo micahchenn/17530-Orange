@@ -114,8 +114,10 @@ const CreateProject = ({pm}) => {
   
   return (
     <>
-      <TextField label="id" variant="outlined" onChange={(e) => {try{setPid(parseInt(e.target.value));}catch(error){}}}/>
-      <Button variant="outlined" onClick={handleClick}>Create Project</Button>
+      <div className="listParent">
+        <TextField label="id" variant="outlined" onChange={(e) => {try{setPid(parseInt(e.target.value));}catch(error){}}}/>
+        <Button variant="outlined" onClick={handleClick}>Create Project</Button>
+      </div>
     </>
   )
 }
