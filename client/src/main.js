@@ -48,32 +48,34 @@ import "./main.css"
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
+const domain = "https://one7530-orange.onrender.com";
+
 const checkInHardware = async (projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkIn_hardware/${projectId}/${qty}`);
+  const response = await fetch(domain + `/checkIn_hardware/${projectId}/${qty}`);
   const data = await response.json();
   return (data.qty + " hardware checked in");
 };
 
 const checkOutHardware = async (projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkOut_hardware/${projectId}/${qty}`);
+  const response = await fetch(domain + `/checkOut_hardware/${projectId}/${qty}`);
   const data = await response.json();
   return (data.qty + " hardware checked out");
 };
 
 const joinProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/joinProject/${projectId}`);
+  const response = await fetch(domain + `/joinProject/${projectId}`);
   const data = await response.json();
   return ("Joined project " + data.pid);
 };
 
 const leaveProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/leaveProject/${projectId}`);
+  const response = await fetch(domain + `/leaveProject/${projectId}`);
   const data = await response.json();
   return ("Left project " + data.pid);
 };
 
 const createProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/create_project/${projectId}`);
+  const response = await fetch(domain + `/create_project/${projectId}`);
   const data = await response.json();
   return ("Created project " + data.pid);
 };
