@@ -53,7 +53,7 @@ def mainPage():
     return jsonify({'res': res})
 
 # Route for joining a project
-@app.route('/joinProject/<projectid>', methods=['POST'])
+@app.route('/joinProject/<projectid>', methods=['GET'])
 def join_project(projectid):
     return jsonify({"pid": f"{projectid}"})
     # Extract data from request
@@ -87,7 +87,7 @@ def add_user():
     return jsonify({})
 
 # Route for getting the list of user projects
-@app.route('/get_user_projects_list', methods=['POST'])
+@app.route('/get_user_projects_list', methods=['GET'])
 def get_user_projects_list():
     # Extract data from request
 
@@ -101,7 +101,7 @@ def get_user_projects_list():
     return jsonify({})
 
 # Route for creating a new project
-@app.route('/create_project/<pid>', methods=['POST'])
+@app.route('/create_project/<pid>', methods=['GET'])
 def create_project(pid):
     # Extract data from request
 
@@ -156,7 +156,7 @@ def get_hw_info():
     return jsonify({})
 
 # Route for checking out hardware
-@app.route('/checkOut_hardware/<projectId>/<qty>', methods=['POST'])
+@app.route('/checkOut_hardware/<projectId>/<qty>', methods=['GET'])
 def check_out(projectId, qty):
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
     # Extract data from request
@@ -171,7 +171,7 @@ def check_out(projectId, qty):
     return jsonify({})
 
 # Route for checking in hardware
-@app.route('/checkIn_hardware/<projectId>/<qty>', methods=['POST'])
+@app.route('/checkIn_hardware/<projectId>/<qty>', methods=['GET'])
 def check_in(projectId, qty):
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
     # Extract data from request
