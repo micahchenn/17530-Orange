@@ -4,6 +4,7 @@ import "./main.css"
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog';
+import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
@@ -125,8 +126,13 @@ function Main() {
     })
   }, []);
 
+  const handlelogout = async () => {
+    await logout();
+  };
+
   return (
     <div className="App">
+      <Navbar logout={handlelogout}></Navbar>
       <div className="createandcapParent">
         <CapacityDisplay hw1cap={100} hw2cap={100} hw1={hw1} hw2={hw2} />
         <CreateOrJoinProject pm={makePopup} />
@@ -143,17 +149,10 @@ function Main() {
 }
 
 const CapacityDisplay = ({ hw1cap, hw2cap, hw1, hw2 }) => {
-  const handlelogout = async () => {
-    await logout();
-  };
-
   return (
     <div className="capParent">
       <h1>HW1: {hw1}/{hw1cap}</h1>
       <h1>HW2: {hw2}/{hw2cap}</h1>
-      <Button variant="filled" className="formbutton" onClick={handlelogout}>
-        Logout
-      </Button>
     </div>
   )
 }
