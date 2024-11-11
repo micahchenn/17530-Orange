@@ -20,12 +20,16 @@ hardware = webapp['Hardware']
 
 # Initialize a new Flask web application
 app = Flask(__name__)
-CORS(app)
-app.secret_key = 'my_secret1'
-# Route for user login
-@app.route('/login', methods=['POST'])
+CORS(app, supports_credentials=True)
+app.secret_key = 'new_sk'
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
+
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     # Extract data from request
+    session.clear()
     data = request.json
     username = data['username']
     userId = data['userId']
@@ -35,27 +39,25 @@ def login():
     session['userId'] = userId
     print(session)
     
-    # Return a JSON response
     return jsonify({"res": res})
 
+
 # Route for the main page
-# this is for showing projects
 @app.route('/main')
 def mainPage():
     print(session)
-    if 'userId' not in session:
-        return redirect(url_for('login'))
     user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
-    
+    hw1 = hwdb.queryHardwareSet(hardware, "HWSet1")["availability"]
+    hw2 = hwdb.queryHardwareSet(hardware, "HWSet2")["availability"]
+
     # remove _id field, since it's useless and not serializable with jsonify
-    res = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
-    print(res)
-    return jsonify({'res': res})
+    projs = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
+    return jsonify({'projects': projs, 'hw1': hw1, 'hw2': hw2})
 
 # Route for joining a project
-@app.route('/joinProject/<projectid>', methods=['POST'])
+@app.route('/joinProject/<projectid>', methods=['POST', 'GET'])
 def join_project(projectid):
-    message = udb.addProject(webapp,  session['userId'], projectid)
+    message = udb.joinProject(webapp,  session['userId'], projectid)
     return jsonify({'pid': projectid, "message": message})
 
 
@@ -71,90 +73,31 @@ def leaveProject(projectid):
 def create_project(pid):
     # Extract data from request
     print(session)
-    message = pdb.createProject(projects, "", pid, "", session['userId'])
+    message = pdb.createProject(webapp, pid, pid, "", session['userId'])
     print(message)
     return jsonify({"pid": f"{pid}", "message":message})
 
 
 # Route for getting project information
-@app.route('/get_project_info', methods=['POST'])
-def get_project_info():
-    # Extract data from request
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.clear()
+    return jsonify({'message': 'ok'})
 
-    # Connect to MongoDB
-
-    # Fetch project information using the projectsDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
-
-# Route for getting all hardware names
-@app.route('/get_all_hw_names', methods=['POST'])
-def get_all_hw_names():
-    # Connect to MongoDB
-
-    # Fetch all hardware names using the hardwareDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
-
-# Route for getting hardware information
-@app.route('/get_hw_info', methods=['POST'])
-def get_hw_info():
-    # Extract data from request
-
-    # Connect to MongoDB
-
-    # Fetch hardware set information using the hardwareDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
 
 # Route for checking out hardware
-@app.route('/checkOut_hardware/<hwId>/<projectId>/<qty>', methods=['GET'])
+@app.route('/checkOut_hardware/<hwId>/<projectId>/<qty>', methods=['GET', 'FETCH'])
 def check_out(hwId, projectId, qty):
-    message = pdb.checkOutHW(webapp, projectId, hwId, qty)
+    message = pdb.checkOutHW(webapp, projectId, hwId, int(qty))
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
 
 # Route for checking in hardware
-@app.route('/checkIn_hardware/<hwId>/<projectId>/<qty>', methods=['GET'])
+@app.route('/checkIn_hardware/<hwId>/<projectId>/<qty>', methods=['GET', 'FETCH'])
 def check_in(hwId, projectId, qty):
-    message = pdb.checkInHW(webapp, projectId,hwId, qty)
+    message = pdb.checkInHW(webapp, projectId,hwId, int(qty))
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
-
-# Route for creating a new hardware set
-@app.route('/create_hardware_set', methods=['POST'])
-def create_hardware_set():
-    # Extract data from request
-
-    # Connect to MongoDB
-
-    # Attempt to create the hardware set using the hardwareDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
-
-# Route for checking the inventory of projects
-@app.route('/api/inventory', methods=['GET'])
-def check_inventory():
-    # Connect to MongoDB
-
-    # Fetch all projects from the HardwareCheckout.Projects collection
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
 
 # Main entry point for the application
 if __name__ == "__main__":
