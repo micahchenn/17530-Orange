@@ -29,14 +29,14 @@ const Login = () => {
   return (
     <div style={{ "textAlign": "center" }}>
       <form onSubmit={submitForm}>
-        <h1>Sign up / Login</h1>
+        <h1>Sign up or login. It's free!</h1>
         <TextField variant="standard" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username..." />
         <br />
         <TextField variant="standard" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password..." />
         <br />
-        <Button variant="filled" type="submit" onClick={() => (isLogin = 0)}>Sign Up</Button>
+        <Button variant="filled" className="formbutton" type="submit" onClick={() => (isLogin = 0)}>Sign Up</Button>
         <br />
-        <Button variant="filled" type="submit" onClick={() => (isLogin = 1)}>Login</Button>
+        <Button variant="filled" className="formbutton" type="submit" onClick={() => (isLogin = 1)}>Login</Button>
       </form>
       <p>{err}</p>
     </div>

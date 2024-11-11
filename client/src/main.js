@@ -127,12 +127,14 @@ function Main() {
 
   return (
     <div className="App">
-      <CapacityDisplay hw1cap={100} hw2cap={100} hw1={hw1} hw2={hw2} />
-      <CreateOrJoinProject pm={makePopup} />
+      <div className="createandcapParent">
+        <CapacityDisplay hw1cap={100} hw2cap={100} hw1={hw1} hw2={hw2} />
+        <CreateOrJoinProject pm={makePopup} />
+      </div>
       <Projects data={data} pm={makePopup} />
       <Dialog open={open} onClose={handleClose}>
         <p>{popupmessage}</p>
-        <Button onClick={handleClose}>
+        <Button variant="filled" className="formbutton" onClick={handleClose}>
           Close
         </Button>
       </Dialog>
@@ -146,10 +148,10 @@ const CapacityDisplay = ({ hw1cap, hw2cap, hw1, hw2 }) => {
   };
 
   return (
-    <div className="listParent">
+    <div className="capParent">
       <h1>HW1: {hw1}/{hw1cap}</h1>
       <h1>HW2: {hw2}/{hw2cap}</h1>
-      <Button variant="outlined" onClick={handlelogout}>
+      <Button variant="filled" className="formbutton" onClick={handlelogout}>
         Logout
       </Button>
     </div>
@@ -168,10 +170,10 @@ const CreateOrJoinProject = ({ pm }) => {
   };
 
   return (
-    <div className="listParent">
+    <div className="createParent">
       <TextField
         label="id"
-        variant="outlined"
+        variant="standard"
         onChange={(e) => {
           try {
             setPid(e.target.value);
@@ -180,10 +182,10 @@ const CreateOrJoinProject = ({ pm }) => {
           }
         }}
       />
-      <Button variant="outlined" onClick={handleJoin}>
+      <Button variant="filled" className="formbutton" onClick={handleJoin}>
         Join Project
       </Button>
-      <Button variant="outlined" onClick={handleCreate}>
+      <Button variant="filled" className="formbutton" onClick={handleCreate}>
         Create Project
       </Button>
     </div>
@@ -192,14 +194,14 @@ const CreateOrJoinProject = ({ pm }) => {
 
 const Projects = ({ data, pm }) => {
   return (
-    <>
+    <div className="projectPane">
       <h2>Projects</h2>
       {data.map((project, index) => (
         <React.Fragment key={index}>
           <ProjectInfo pname={project.projectName} list={project.users} pm={pm} data={project} />
         </React.Fragment>
       ))}
-    </>
+    </div>
   );
 };
 
@@ -245,10 +247,12 @@ const ItemManipulation = ({ projname, hname, capacity, pm, data }) => {
 
   return (
     <>
-      <h6>{hname}: {data.hwSets[hname]}</h6>
-      <TextField label="qty" variant="outlined" onChange={(e) => { try { setQty(parseInt(e.target.value)); } catch (error) { } }} />
-      <Button variant="outlined" onClick={handleCheckIn}>Check In</Button>
-      <Button variant="outlined" onClick={handleCheckOut}>Check Out</Button>
+      <h6>{hname}: {data.hwSets[hname]} checked out</h6>
+      <TextField label="qty" variant="standard" onChange={(e) => { try { setQty(parseInt(e.target.value)); } catch (error) { } }} />
+      <div className="hwparent">
+        <Button variant="filled" className="formbutton" onClick={handleCheckIn}>Check In</Button>
+        <Button variant="filled" className="formbutton" onClick={handleCheckOut}>Check Out</Button>
+      </div>
     </>
   );
 }
@@ -259,7 +263,7 @@ const Leave = ({ pm, pid }) => {
   }
   return (
     <>
-      <Button variant="outlined" onClick={handleClick}>
+      <Button variant="filled" className="formbutton" onClick={handleClick}>
         Leave
       </Button>
     </>
