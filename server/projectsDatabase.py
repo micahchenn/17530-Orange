@@ -18,32 +18,32 @@ def queryProject(projects, projectId):
     
 
 # Function to create a new project
-def createProject(projects, projectName, projectId, description):
+def createProject(projects, projectName, projectId, description, userId):
     project = queryProject(projects, projectId)
     if project is None:
-        projects.insert_one({"projectName": projectName, "projectId": projectId, "description": description, "hwSets": {}, "users": []})
+        projects.insert_one({"projectName": projectName, "projectId": projectId, "description": description, "hwSets": {}, "users": [userId], 'auth': [userId]})
         return "success"
 
     return "already_exists"
 
 
 # Function to add a user to a project
-def addUser(webapp, projectId, userId):
-    project = queryProject(webapp['Projects'], projectId)
-    user = webapp['Users'].find_one({"userId": userId})
+# def addUser(webapp, projectId, userId):
+#     project = queryProject(webapp['Projects'], projectId)
+#     user = webapp['Users'].find_one({"userId": userId})
 
-    if project is None:
-        return "invalid_project"
+#     if project is None:
+#         return "invalid_project"
     
-    if user is None:
-        return "invalid_user"
+#     if user is None:
+#         return "invalid_user"
     
-    if userId in project['users']:
-        return "already_exists"
+#     if userId in project['users']:
+#         return "already_exists"
     
-    project['users'].append(userId)
-    user['projects'].append(projectId)
-    return "success"
+#     project['users'].append(userId)
+#     user['projects'].append(projectId)
+#     return "success"
 
 
 # Function to update hardware usage in a project

@@ -52,6 +52,24 @@ def joinProject(webapp, userId, projectId):
     return "success"
 
 
+def leaveProject(webapp, userId, projectId):
+    user = webapp['Users'].find_one({"userId": userId})
+    project = webapp['Projects'].find_one({"projectId": projectId})
+
+    if user is None:
+        return "invalid_user"
+
+    if project is None:
+        return "invalid project"
+
+    if projectId not in user['projects']:
+        return 'project_not_exists'
+    
+    user['projects'].remove(projectId)
+    project['users'].remove(userId)
+    return "success"
+
+
 # Function to get the list of projects for a user
 def getUserProjectsList(users, userId):
     user = users.find_one({"userId": userId})

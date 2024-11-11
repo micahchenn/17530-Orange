@@ -21,7 +21,7 @@ hardware = webapp['Hardware']
 # Initialize a new Flask web application
 app = Flask(__name__)
 CORS(app)
-app.secret_key = 'my_secret'
+app.secret_key = 'my_secret1'
 # Route for user login
 @app.route('/login', methods=['POST'])
 def login():
@@ -38,7 +38,7 @@ def login():
     # Return a JSON response
     return jsonify({"res": res})
 
-# Route for the main page (Work in progress)
+# Route for the main page
 # this is for showing projects
 @app.route('/main')
 def mainPage():
@@ -53,66 +53,27 @@ def mainPage():
     return jsonify({'res': res})
 
 # Route for joining a project
-@app.route('/joinProject/<projectid>', methods=['GET'])
+@app.route('/joinProject/<projectid>', methods=['POST'])
 def join_project(projectid):
-    return jsonify({"pid": f"{projectid}"})
-    # Extract data from request
+    message = udb.addProject(webapp,  session['userId'], projectid)
+    return jsonify({'pid': projectid, "message": message})
 
-    # Connect to MongoDB
 
-    # Attempt to join the project using the usersDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
-
+# Route for leaving project
 @app.route('/leaveProject/<projectid>', methods=['GET'])
 def leaveProject(projectid):
-    return jsonify({"pid": f"{projectid}"})
+    message = udb.leaveProject(webapp,  session['userId'], projectid)
+    return jsonify({'pid': projectid, "message": message})
 
-
-# Route for adding a new user
-@app.route('/add_user', methods=['POST'])
-def add_user():
-    # Extract data from request
-
-    # Connect to MongoDB
-
-    # Attempt to add the user using the usersDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
-
-# Route for getting the list of user projects
-@app.route('/get_user_projects_list', methods=['GET'])
-def get_user_projects_list():
-    # Extract data from request
-
-    # Connect to MongoDB
-
-    # Fetch the user's projects using the usersDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
 
 # Route for creating a new project
 @app.route('/create_project/<pid>', methods=['GET'])
 def create_project(pid):
     # Extract data from request
-
-    # Connect to MongoDB
-
-    # Attempt to create the project using the projectsDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({"pid": f"{pid}"})
+    print(session)
+    message = pdb.createProject(projects, "", pid, "", session['userId'])
+    print(message)
+    return jsonify({"pid": f"{pid}", "message":message})
 
 
 # Route for getting project information
@@ -156,34 +117,18 @@ def get_hw_info():
     return jsonify({})
 
 # Route for checking out hardware
-@app.route('/checkOut_hardware/<projectId>/<qty>', methods=['GET'])
-def check_out(projectId, qty):
-    return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
-    # Extract data from request
+@app.route('/checkOut_hardware/<hwId>/<projectId>/<qty>', methods=['GET'])
+def check_out(hwId, projectId, qty):
+    message = pdb.checkOutHW(webapp, projectId, hwId, qty)
+    return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
-    # Connect to MongoDB
-
-    # Attempt to check out the hardware using the projectsDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
 
 # Route for checking in hardware
-@app.route('/checkIn_hardware/<projectId>/<qty>', methods=['GET'])
-def check_in(projectId, qty):
-    return jsonify({"qty": f"{qty}", "pid": f"{projectId}"})
-    # Extract data from request
+@app.route('/checkIn_hardware/<hwId>/<projectId>/<qty>', methods=['GET'])
+def check_in(hwId, projectId, qty):
+    message = pdb.checkInHW(webapp, projectId,hwId, qty)
+    return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
-    # Connect to MongoDB
-
-    # Attempt to check in the hardware using the projectsDB module
-
-    # Close the MongoDB connection
-
-    # Return a JSON response
-    return jsonify({})
 
 # Route for creating a new hardware set
 @app.route('/create_hardware_set', methods=['POST'])
@@ -212,42 +157,5 @@ def check_inventory():
     return jsonify({})
 
 # Main entry point for the application
-
-@app.route('/data')
-def testing():
-    return {
-        'first_name': 'Varun',
-        'last_name': 'Srinivasan'
-    }
-
-
-
-
-
 if __name__ == "__main__":
-    
-    # config = configparser.ConfigParser()
-    # config.read(os.path.abspath(os.path.join("server/.ini")))
-    # app.config['DEBUG'] = True
-    # app.config['MONGO_URI'] = config['PROD']['DB_URI']
-
     app.run()
-
-
-
-'''
-if __name__ == "__main__":
-    
-    # config = configparser.ConfigParser()
-    # config.read(os.path.abspath(os.path.join("server/.ini")))
-    # app.config['DEBUG'] = True
-    # app.config['MONGO_URI'] = config['PROD']['DB_URI']
-
-    app.run()
-
-'''
-
-
-
-
-
