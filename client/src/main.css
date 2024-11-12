@@ -1,18 +1,47 @@
 .list{
-    display: inline-block;
-    text-align: center;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-  
-  .listParent{
-    height: 200px;
-    width: 100%;
-    background-color: rgb(95, 207, 207);
-    margin: 20px;
-    border-radius: 10px;
-  }
-  
-  MuiInputBase-input{
-    height: 10px;
-  }
+  display: inline-block;
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.listParent{
+  display: inline-flex;
+  background-color: rgb(241, 255, 247);
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.capParent{
+  height: 200px;
+  width: 40%;
+  background-color: rgb(241, 255, 247);
+  border-radius: 10px;
+  margin: 5%;
+  text-align: center;
+}
+
+.createParent{
+  height: 200px;
+  width: 40%;
+  background-color: rgb(241, 255, 247);
+  border-radius: 10px;
+  margin: 5%;
+  display: grid;
+  place-items: center;
+}
+
+.projectPane{
+  width: 100%;
+  text-align: center;
+}
+
+.createandcapParent{
+  width: 100%;
+  display: inline-flex;
+}
+
+MuiInputBase-input{
+  height: 10px;
+}

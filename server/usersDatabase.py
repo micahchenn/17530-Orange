@@ -47,8 +47,27 @@ def joinProject(webapp, userId, projectId):
     if projectId in user['projects']:
         return "already_exists"
     
-    user['projects'].append(projectId)
-    project['users'].append(userId)
+
+    webapp['Users'].update_one({'userId': userId}, {'$push': {'projects': projectId}})
+    webapp['Projects'].update_one({'projectId': projectId}, {'$push': {'users': userId}})
+    return "success"
+
+
+def leaveProject(webapp, userId, projectId):
+    user = webapp['Users'].find_one({"userId": userId})
+    project = webapp['Projects'].find_one({"projectId": projectId})
+
+    if user is None:
+        return "invalid_user"
+
+    if project is None:
+        return "invalid project"
+
+    if projectId not in user['projects']:
+        return 'project_not_exists'
+    
+    webapp['Users'].update_one({'userId': userId}, {'$pull': {'projects': projectId}})
+    webapp['Projects'].update_one({'projectId': projectId}, {'$pull': {'users': userId}})
     return "success"
 
 

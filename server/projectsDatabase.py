@@ -1,6 +1,6 @@
 # Import necessary libraries and modules
 from pymongo import MongoClient
-
+import usersDatabase
 '''
 Structure of Project entry:
 Project = {
@@ -18,32 +18,43 @@ def queryProject(projects, projectId):
     
 
 # Function to create a new project
-def createProject(projects, projectName, projectId, description):
-    project = queryProject(projects, projectId)
+def createProject(webapp, projectName, projectId, description, userId):
+    project = queryProject(webapp['Projects'], projectId)
+    user = webapp['Users'].find_one({"userId": userId})
+    
     if project is None:
-        projects.insert_one({"projectName": projectName, "projectId": projectId, "description": description, "hwSets": {}, "users": []})
+        webapp['Projects'].insert_one({
+            "projectName": projectName, 
+            "projectId": projectId, 
+            "description": description, 
+            "hwSets": {'HWSet1': 0, 'HWSet2': 0}, 
+            "users": [userId], 
+            'auth': [userId]
+            })
+        
+        webapp['Users'].update_one({'userId': userId}, {'$push': {'projects': projectId}})
         return "success"
 
     return "already_exists"
 
 
 # Function to add a user to a project
-def addUser(webapp, projectId, userId):
-    project = queryProject(webapp['Projects'], projectId)
-    user = webapp['Users'].find_one({"userId": userId})
+# def authUser(webapp, projectId, userId):
+#     project = queryProject(webapp['Projects'], projectId)
+#     user = webapp['Users'].find_one({"userId": userId})
 
-    if project is None:
-        return "invalid_project"
+#     if project is None:
+#         return "invalid_project"
     
-    if user is None:
-        return "invalid_user"
+#     if user is None:
+#         return "invalid_user"
     
-    if userId in project['users']:
-        return "already_exists"
+#     if userId in project['users']:
+#         return "already_exists"
     
-    project['users'].append(userId)
-    user['projects'].append(projectId)
-    return "success"
+#     project['auth'].append(userId)
+#     user['projects'].append(projectId)
+#     return "success"
 
 
 # Function to update hardware usage in a project
@@ -66,14 +77,19 @@ def checkOutHW(webapp, projectId, hwSetName, qty):
     if hw is None:
         return "invalid_hw"
     
-    if qty > hw['capacity']:
+    if qty > hw['availability']:
         return "qty_err"
     
     if hwSetName not in project['hwSets']:
         project['hwSets'][hwSetName] = 0
 
-    project['hwSets'][hwSetName] += qty
-    hw['availability'] -= qty
+    #project['hwSets'][hwSetName] += qty
+    #hw['availability'] -= qty
+    webapp['Projects'].update_one({'projectId': projectId}, {'$set': {
+        f'hwSets.{hwSetName}': project['hwSets'][hwSetName] + qty}})
+    
+    webapp['Hardware'].update_one({'hwName': hwSetName}, {'$set': {'availability': hw['availability'] - qty}})
+
     return "success"
     
 
@@ -94,6 +110,9 @@ def checkInHW(webapp, projectId, hwSetName, qty):
     if qty > project['hwSets'][hwSetName]:
         return "qty_err"
 
-    project['hwSets'][hwSetName] -= qty
-    hw['availability'] += qty
+
+    webapp['Projects'].update_one({'projectId': projectId}, {'$set': {
+        f'hwSets.{hwSetName}': project['hwSets'][hwSetName] - qty}})
+    
+    webapp['Hardware'].update_one({'hwName': hwSetName}, {'$set': {'availability': hw['availability'] + qty}})
     return updateUsage(webapp, projectId, hwSetName)
