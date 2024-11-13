@@ -8,7 +8,7 @@ import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
-const domain = `https://one7530-orange.onrender.com`;
+const domain = `http://localhost:5000`;
 
 const checkInHardware = async (hwId, projectId, qty) => {
   const response = await fetch(`${domain}/checkIn_hardware${hwId}/${projectId}/${qty}`, {
@@ -83,13 +83,16 @@ const leaveProject = async (projectId) => {
 
 };
 
-const createProject = async (projectId) => {
+const createProject = async (projectId, desc) => {
   const response = await fetch(`${domain}/create_project/${projectId}`, {
-    method: 'GET',
+    method: 'POST',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      description : desc
+    }),
   });
   const data = await response.json();
   if (data.message == "success") {
@@ -173,9 +176,11 @@ const CapacityDisplay = ({ hw1cap, hw2cap, hw1, hw2 }) => {
 
 const CreateOrJoinProject = ({ pm }) => {
   const [pid, setPid] = useState("");
+  const [desc, setDesc] = useState("");
+
 
   const handleCreate = async () => {
-    await createProject(pid);
+    await createProject(pid, desc);
   };
 
   const handleJoin = async () => {
@@ -190,6 +195,17 @@ const CreateOrJoinProject = ({ pm }) => {
         onChange={(e) => {
           try {
             setPid(e.target.value);
+          } catch (error) {
+            console.error("Invalid input:", error);
+          }
+        }}
+      />
+      <TextField
+        label="description"
+        variant="standard"
+        onChange={(e) => {
+          try {
+            setDesc(e.target.value);
           } catch (error) {
             console.error("Invalid input:", error);
           }
@@ -224,7 +240,10 @@ const ProjectInfo = ({ pname, list, pm, data }) => {
   return (
     <>
       <div className="listParent">
-        <div className="list"><h3>{pname}</h3></div>
+        <div className="list">
+          <h3>{pname}</h3>
+          <h6>{data.description}</h6>
+        </div>
         <div className="list">
           <UserList list={list} />
         </div>

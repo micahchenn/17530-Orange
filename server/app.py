@@ -70,10 +70,12 @@ def leaveProject(projectid):
 
 
 # Route for creating a new project
-@app.route('/create_project/<pid>', methods=[''])
+@app.route('/create_project/<pid>', methods=['POST'])
 def create_project(pid):
+    data = request.json
+    desc = data["description"]
     print(session)
-    message = pdb.createProject(webapp, pid, pid, "", session['userId'])
+    message = pdb.createProject(webapp, pid, pid, desc, session['userId'])
     print(message)
     return jsonify({"pid": f"{pid}", "message":message})
 
