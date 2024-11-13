@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import './navbar.css';
 import Button from '@mui/material/Button'
 
-//change
 
 const Navbar = ({logout}) => {
   return (
