@@ -20,7 +20,7 @@ hardware = webapp['Hardware']
 
 # Initialize a new Flask web application
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://orangehardware.netlify.app"]}}, supports_credentials=True)
 app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
