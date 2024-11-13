@@ -70,9 +70,8 @@ def leaveProject(projectid):
 
 
 # Route for creating a new project
-@app.route('/create_project/<pid>', methods=['GET'])
+@app.route('/create_project/<pid>', methods=[''])
 def create_project(pid):
-    # Extract data from request
     print(session)
     message = pdb.createProject(webapp, pid, pid, "", session['userId'])
     print(message)
