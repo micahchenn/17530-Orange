@@ -8,10 +8,11 @@ import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
-const domain = `https://localhost:5000`;
+const domain = `https://one7530-orange.onrender.com`;
+
 
 const checkInHardware = async (hwId, projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
+  const response = await fetch(`${domain}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -26,7 +27,7 @@ const checkInHardware = async (hwId, projectId, qty) => {
 };
 
 const logout = async () => {
-  const response = await fetch('http://localhost:5000/logout', {
+  const response = await fetch(`${domain}/logout`, {
     method: 'GET',
     credentials: 'include',
   });
@@ -38,7 +39,7 @@ const logout = async () => {
 
 
 const checkOutHardware = async (hwId, projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
+  const response = await fetch(`${domain}/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -54,7 +55,7 @@ const checkOutHardware = async (hwId, projectId, qty) => {
 };
 
 const joinProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/joinProject/${projectId}`, {
+  const response = await fetch(`${domain}/joinProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -69,7 +70,7 @@ const joinProject = async (projectId) => {
 };
 
 const leaveProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/leaveProject/${projectId}`, {
+  const response = await fetch(`${domain}/leaveProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -84,7 +85,7 @@ const leaveProject = async (projectId) => {
 };
 
 const createProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/create_project/${projectId}`, {
+  const response = await fetch(`${domain}/create_project/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
