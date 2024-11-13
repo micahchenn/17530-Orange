@@ -43,7 +43,7 @@ def login():
 
 
 # Route for the main page
-@app.route('/main')
+@app.route('/main', methods=['GET'])
 def mainPage():
     print(session)
     user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
@@ -52,6 +52,7 @@ def mainPage():
 
     # remove _id field, since it's useless and not serializable with jsonify
     projs = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
+    print(projs)
     return jsonify({'projects': projs, 'hw1': hw1, 'hw2': hw2})
 
 # Route for joining a project

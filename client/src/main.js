@@ -117,14 +117,28 @@ function Main() {
   };
 
   useEffect(() => {
-    axios.get('/main').then((res) => {
-      //console.log("ressssss");
-      console.log(res)
-      setData(res.data.projects);
-      setHW1(res.data.hw1);
-      setHW2(res.data.hw2);
-    })
+    async function fetchData() {
+      const res = await fetch(`http://localhost:5000/main`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      return data;
+    }
+  
+    fetchData().then((data) => {
+      console.log(data);
+      setData(data.projects);
+      setHW1(data.hw1);
+      setHW2(data.hw2);
+    }).catch((error) => {
+      console.error("Error fetching data:", error);
+    });
   }, []);
+  
 
   const handlelogout = async () => {
     await logout();
