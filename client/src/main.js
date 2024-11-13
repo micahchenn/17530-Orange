@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import "./main.css"
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import "./main.css";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import Navbar from './navbar.js';
-import { useNavigate } from 'react-router-dom'
-
-
-const domain = `https://localhost:5000`;
+import { useNavigate } from 'react-router-dom';
+import config from './config.js';
 
 const checkInHardware = async (hwId, projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
+  const response = await fetch(`${config.PROXY}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -19,26 +17,25 @@ const checkInHardware = async (hwId, projectId, qty) => {
     },
   });
   const data = await response.json();
-  if (data.message == "success") {
+  if (data.message === "success") {
     window.location.reload();
   }
   return data.message;
 };
 
 const logout = async () => {
-  const response = await fetch('http://localhost:5000/logout', {
+  const response = await fetch(`${config.PROXY}/logout`, {
     method: 'GET',
     credentials: 'include',
   });
-  console.log(response)
+  console.log(response);
   if (response.ok) {
     window.location.href = '/login';
   }
 };
 
-
 const checkOutHardware = async (hwId, projectId, qty) => {
-  const response = await fetch(`http://localhost:5000/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
+  const response = await fetch(`${config.PROXY}/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -46,15 +43,14 @@ const checkOutHardware = async (hwId, projectId, qty) => {
     },
   });
   const data = await response.json();
-  if (data.message == "success") {
+  if (data.message === "success") {
     window.location.reload();
   }
   return data.message;
-
 };
 
 const joinProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/joinProject/${projectId}`, {
+  const response = await fetch(`${config.PROXY}/joinProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -63,13 +59,13 @@ const joinProject = async (projectId) => {
   });
   const data = await response.json();
   console.log(data);
-  if (data.message == "success") {
+  if (data.message === "success") {
     window.location.reload();
   }
 };
 
 const leaveProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/leaveProject/${projectId}`, {
+  const response = await fetch(`${config.PROXY}/leaveProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -77,14 +73,13 @@ const leaveProject = async (projectId) => {
     },
   });
   const data = await response.json();
-  if (data.message == "success") {
+  if (data.message === "success") {
     window.location.reload();
   }
-
 };
 
 const createProject = async (projectId) => {
-  const response = await fetch(`http://localhost:5000/create_project/${projectId}`, {
+  const response = await fetch(`${config.PROXY}/create_project/${projectId}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -92,12 +87,10 @@ const createProject = async (projectId) => {
     },
   });
   const data = await response.json();
-  if (data.message == "success") {
+  if (data.message === "success") {
     window.location.reload();
   }
 };
-
-
 
 function Main() {
   const [data, setData] = useState([]);
@@ -117,13 +110,12 @@ function Main() {
   };
 
   useEffect(() => {
-    axios.get('/main').then((res) => {
-      //console.log("ressssss");
-      console.log(res)
+    axios.get(`${config.PROXY}/main`).then((res) => {
+      console.log(res);
       setData(res.data.projects);
       setHW1(res.data.hw1);
       setHW2(res.data.hw2);
-    })
+    });
   }, []);
 
   const handlelogout = async () => {
@@ -154,8 +146,8 @@ const CapacityDisplay = ({ hw1cap, hw2cap, hw1, hw2 }) => {
       <h1>HW1: {hw1}/{hw1cap}</h1>
       <h1>HW2: {hw2}/{hw2cap}</h1>
     </div>
-  )
-}
+  );
+};
 
 const CreateOrJoinProject = ({ pm }) => {
   const [pid, setPid] = useState("");
@@ -204,8 +196,6 @@ const Projects = ({ data, pm }) => {
   );
 };
 
-
-
 const ProjectInfo = ({ pname, list, pm, data }) => {
   return (
     <>
@@ -226,7 +216,7 @@ const ProjectInfo = ({ pname, list, pm, data }) => {
       </div>
     </>
   );
-}
+};
 
 const ItemManipulation = ({ projname, hname, capacity, pm, data }) => {
   const [qty, setQty] = useState(0);
@@ -254,12 +244,12 @@ const ItemManipulation = ({ projname, hname, capacity, pm, data }) => {
       </div>
     </>
   );
-}
+};
 
 const Leave = ({ pm, pid }) => {
   const handleClick = async () => {
     await leaveProject(pid);
-  }
+  };
   return (
     <>
       <Button variant="filled" className="formbutton" onClick={handleClick}>
@@ -267,7 +257,7 @@ const Leave = ({ pm, pid }) => {
       </Button>
     </>
   );
-}
+};
 
 const UserList = ({ list }) => {
   return (
@@ -275,6 +265,6 @@ const UserList = ({ list }) => {
       <h4>{list.join(", ")}</h4>
     </>
   );
-}
+};
 
 export default Main;
