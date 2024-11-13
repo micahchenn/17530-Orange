@@ -8,7 +8,7 @@ import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
-const domain = `http://localhost:5000`;
+const domain = `https://one7530-orange.onrender.com/`;
 
 const checkInHardware = async (hwId, projectId, qty) => {
   const response = await fetch(`${domain}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
