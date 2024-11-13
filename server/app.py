@@ -27,34 +27,48 @@ app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
 
 
 # Route for user login
+# Remove 'GET' from the methods
 @app.route('/login', methods=['POST'])
 def login():
     # Extract data from request
     data = request.json
-    username = data['username']
-    userId = data['userId']
-    password = data['password']
-    isLogin = data['isLogin']
-    res = udb.login(users, username, userId, password) if isLogin == 1 else udb.addUser(users, username, userId, password)
-    session['userId'] = userId
-    print(session)
+    username = data.get('username')
+    userId = data.get('userId')
+    password = data.get('password')
+    isLogin = data.get('isLogin', 0)
+    
+    # Handle login or user registration
+    if isLogin == 1:
+        res = udb.login(users, username, userId, password)
+    else:
+        res = udb.addUser(users, username, userId, password)
+    
+    if res == "success":
+        session['userId'] = userId
+        print(session)
     
     # Return a JSON response
     return jsonify({"res": res})
 
 # Route for the main page (Work in progress)
 # this is for showing projects
-@app.route('/main')
+@app.route('/main', methods=['GET'])
 def mainPage():
     print(session)
     if 'userId' not in session:
-        return redirect(url_for('login'))
-    user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
+        return jsonify({"error": "Unauthorized"}), 401
     
-    # remove _id field, since it's useless and not serializable with jsonify
-    res = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
-    print(res)
-    return jsonify({'res': res})
+    user_projects = [
+        pdb.queryProject(projects, p)
+        for p in udb.getUserProjectsList(users, session['userId'])
+    ]
+    hw1 = hwdb.queryHardwareSet(hardware, "HWSet1")["availability"]
+    hw2 = hwdb.queryHardwareSet(hardware, "HWSet2")["availability"]
+
+    # Remove _id field, since it's useless and not serializable with jsonify
+    projs = [{x: p[x] for x in p if x != '_id'} for p in user_projects]
+    print(projs)
+    return jsonify({'projects': projs, 'hw1': hw1, 'hw2': hw2})
 
 # Route for joining a project
 @app.route('/joinProject/<projectid>', methods=['GET'])
