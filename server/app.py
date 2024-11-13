@@ -24,6 +24,7 @@ CORS(app, supports_credentials=True)
 app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
+app.config['SERVER_NAME'] = "https://one7530-orange.onrender.com"
 
 
 @app.route('/login', methods=['POST', 'GET'])
