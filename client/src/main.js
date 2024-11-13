@@ -9,135 +9,92 @@ import { useNavigate } from 'react-router-dom';
 import config from './config.js';
 
 
-//hie
+const domain = `https://one7530-orange.onrender.com`;
 
 
 // API call functions
 const checkInHardware = async (hwId, projectId, qty) => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/checkIn_hardware/${hwId}/${projectId}/${qty}`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const data = response.data;
-    if (data.message === "success") {
-      window.location.reload();
-    }
-    return data.message;
-  } catch (error) {
-    console.error("Check In Error:", error);
-    return null;
+  const response = await fetch(`${domain}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  if (data.message == "success") {
+    window.location.reload();
   }
+  return data.message;
 };
 
 const logout = async () => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/logout`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(response);
-    if (response.status === 200) {
-      window.location.href = '/login';
-    }
-  } catch (error) {
-    console.error("Logout Error:", error);
+  const response = await fetch(`${domain}/logout`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  console.log(response)
+  if (response.ok) {
+    window.location.href = '/login';
   }
 };
 
 const checkOutHardware = async (hwId, projectId, qty) => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/checkOut_hardware/${hwId}/${projectId}/${qty}`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const data = response.data;
-    if (data.message === "success") {
-      window.location.reload();
-    }
-    return data.message;
-  } catch (error) {
-    console.error("Check Out Error:", error);
-    return null;
+  const response = await fetch(`${domain}/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  if (data.message == "success") {
+    window.location.reload();
   }
+  return data.message;
+
 };
 
 const joinProject = async (projectId) => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/joinProject/${projectId}`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const data = response.data;
-    console.log(data);
-    if (data.message === "success") {
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Join Project Error:", error);
+  const response = await fetch(`${domain}/joinProject/${projectId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  console.log(data);
+  if (data.message == "success") {
+    window.location.reload();
   }
 };
 
 const leaveProject = async (projectId) => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/leaveProject/${projectId}`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const data = response.data;
-    if (data.message === "success") {
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Leave Project Error:", error);
+  const response = await fetch(`${domain}/leaveProject/${projectId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  if (data.message == "success") {
+    window.location.reload();
   }
 };
 
 const createProject = async (projectId) => {
-  try {
-    const response = await axios.post(
-      `${config.PROXY}/create_project/${projectId}`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const data = response.data;
-    if (data.message === "success") {
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Create Project Error:", error);
+  const response = await fetch(`${domain}/create_project/${projectId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  if (data.message == "success") {
+    window.location.reload();
   }
 };
 
