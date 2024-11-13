@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 const domain = `http://localhost:5000`;
 
 const checkInHardware = async (hwId, projectId, qty) => {
-  const response = await fetch(`${domain}/checkIn_hardware${hwId}/${projectId}/${qty}`, {
+  const response = await fetch(`${domain}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
