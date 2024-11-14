@@ -27,6 +27,9 @@ app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
 app.config['SERVER_NAME'] = "app-orange-hardware-b474fc6fdc47.herokuapp.com"
 #app.config['SERVER_NAME'] = 'localhost:5000'
 
+@app.route('/')
+def home():
+    return "Hello, World!"
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
