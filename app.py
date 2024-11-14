@@ -19,13 +19,17 @@ projects = webapp['Projects']
 hardware = webapp['Hardware']
 
 # Initialize a new Flask web application
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build/',    static_url_path='/')
 CORS(app, supports_credentials=True)
 app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
 app.config['SERVER_NAME'] = "app-orange-hardware-b474fc6fdc47.herokuapp.com"
 #app.config['SERVER_NAME'] = 'localhost:5000'
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
