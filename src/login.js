@@ -6,7 +6,6 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Navbar from './navbarlogin.js';
 
-const domain = `http://localhost:5000`;
 
 const Login = () => {
 
@@ -20,10 +19,12 @@ const Login = () => {
   const submitForm = async (e) => {
     e.preventDefault();
     let userId = username;
-    const response = await axios.post(`${domain}/login`, { username, userId, password, isLogin }, { withCredentials: true });
+    const response = await axios.post('https://app-orange-hardware-b474fc6fdc47.herokuapp.com/login', { username, userId, password, isLogin }, { withCredentials: true });
+    //const response = await axios.post('http://localhost:5000/login', { username, userId, password, isLogin }, { withCredentials: true });
+
     setErr(response.data.res);
     console.log(response);
-    if (response.data.res == "success") {
+    if (response.data.res === "success") {
       navigate('/main');
     }
   }
