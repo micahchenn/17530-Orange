@@ -105,13 +105,14 @@ def check_in(hwId, projectId, qty):
     message = pdb.checkInHW(webapp, projectId,hwId, int(qty))
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
+
 @app.route('/main', methods=['GET'])
 def main():
-    return send_from_directory(app.static_folder, 'main')
+    return send_from_directory(app.static_folder, 'main.js')
 
 @app.route('/login', methods=['GET'])
 def lgn():
-    return send_from_directory(app.static_folder, 'login')
+    return send_from_directory(app.static_folder, 'login.js')
 
 
 
