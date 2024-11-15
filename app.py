@@ -19,7 +19,7 @@ projects = webapp['Projects']
 hardware = webapp['Hardware']
 
 # Initialize a new Flask web application
-app = Flask(__name__, static_folder='build', static_url_path='/build')
+app = Flask(__name__, static_folder='build/', static_url_path='/')
 CORS(app, supports_credentials=True)
 app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
@@ -48,7 +48,7 @@ def login():
 
 
 # Route for the main page
-@app.route('/main', methods=['GET'])
+@app.route('/getInfo', methods=['GET'])
 def mainPage():
     print(session)
     user_projects = [pdb.queryProject(projects, p) for p in udb.getUserProjectsList(users, session['userId'])]
