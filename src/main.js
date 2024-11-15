@@ -22,7 +22,7 @@ const checkInHardware = async (hwId, projectId, qty) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.reload();
+    window.location.href("/toMain")
   }
   return data.message;
 };
@@ -49,7 +49,7 @@ const checkOutHardware = async (hwId, projectId, qty) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.reload();
+    window.location.href("/toMain")
   }
   return data.message;
 
@@ -66,7 +66,7 @@ const joinProject = async (projectId) => {
   const data = await response.json();
   console.log(data);
   if (data.message == "success") {
-    window.location.reload();
+    window.location.href("/toMain")
   }
 };
 
@@ -80,7 +80,7 @@ const leaveProject = async (projectId) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.reload();
+    window.location.href("/toMain")
   }
 
 };
@@ -98,7 +98,7 @@ const createProject = async (projectId, desc) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.reload();
+    window.location.href("/toMain")
   }
 };
 
