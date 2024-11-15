@@ -8,8 +8,8 @@ import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
-//const domain = `https://app-orange-hardware-b474fc6fdc47.herokuapp.com`;
-const domain = `http://localhost:5000`;
+const domain = `https://app-orange-hardware-b474fc6fdc47.herokuapp.com`;
+//const domain = `http://localhost:5000`;
 
 
 const checkInHardware = async (hwId, projectId, qty) => {
@@ -123,7 +123,7 @@ function Main() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`${domain}/main`, {
+      const res = await fetch(`${domain}/getInfo`, {
         method: 'GET',
         credentials: 'include',
         headers: {
