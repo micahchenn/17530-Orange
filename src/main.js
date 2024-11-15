@@ -34,7 +34,7 @@ const logout = async () => {
   });
   console.log(response)
   if (response.ok) {
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 };
 
