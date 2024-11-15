@@ -1,6 +1,6 @@
 # Import necessary libraries and modules
 from bson.objectid import ObjectId
-from flask import Flask, request, jsonify, session, redirect, url_for
+from flask import Flask, request, jsonify, session, redirect, url_for, send_from_directory
 from pymongo import MongoClient
 from flask_cors import CORS
 import os
@@ -31,7 +31,7 @@ app.config['SERVER_NAME'] = "app-orange-hardware-b474fc6fdc47.herokuapp.com"
 def index():
     return app.send_static_file('index.html')
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
     # Extract data from request
     session.clear()
@@ -104,6 +104,16 @@ def check_out(hwId, projectId, qty):
 def check_in(hwId, projectId, qty):
     message = pdb.checkInHW(webapp, projectId,hwId, int(qty))
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
+
+@app.route('/main', methods=['GET'])
+def main():
+    return send_from_directory(app.static_folder, 'main')
+
+@app.route('/login', methods=['GET'])
+def lgn():
+    return send_from_directory(app.static_folder, 'login')
+
+
 
 
 # Main entry point for the application
