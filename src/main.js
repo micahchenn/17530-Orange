@@ -123,7 +123,7 @@ function Main() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`${domain}/getInfo`, {
+      const res = await fetch(`${domain}/main`, {
         method: 'GET',
         credentials: 'include',
         headers: {
