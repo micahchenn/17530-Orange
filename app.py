@@ -25,7 +25,7 @@ app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
 app.config['SERVER_NAME'] = "app-orange-hardware-b474fc6fdc47.herokuapp.com"
-#app.config['SERVER_NAME'] = '127.0.0.1:5000'
+#app.config['SERVER_NAME'] = 'localhost:5000'
 
 @app.route('/')
 def index():

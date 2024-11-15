@@ -12,7 +12,7 @@ const domain = `https://app-orange-hardware-b474fc6fdc47.herokuapp.com`;
 //const domain = `http://localhost:5000`;
 
 
-const checkInHardware = async (hwId, projectId, qty) => {
+const checkInHardware = async (hwId, projectId, qty, nav) => {
   const response = await fetch(`${domain}/checkIn_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
@@ -22,7 +22,8 @@ const checkInHardware = async (hwId, projectId, qty) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.href("/toMain")
+    nav("/main", { replace: true });
+    nav(0);
   }
   return data.message;
 };
@@ -39,7 +40,7 @@ const logout = async () => {
 };
 
 
-const checkOutHardware = async (hwId, projectId, qty) => {
+const checkOutHardware = async (hwId, projectId, qty, nav) => {
   const response = await fetch(`${domain}/checkOut_hardware/${hwId}/${projectId}/${qty}`, {
     method: 'GET',
     credentials: 'include',
@@ -49,13 +50,14 @@ const checkOutHardware = async (hwId, projectId, qty) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.href("/toMain")
+    nav("/main", { replace: true });
+    nav(0);
   }
   return data.message;
 
 };
 
-const joinProject = async (projectId) => {
+const joinProject = async (projectId, nav) => {
   const response = await fetch(`${domain}/joinProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
@@ -66,11 +68,12 @@ const joinProject = async (projectId) => {
   const data = await response.json();
   console.log(data);
   if (data.message == "success") {
-    window.location.href("/toMain")
+    nav("/main", { replace: true });
+    nav(0);
   }
 };
 
-const leaveProject = async (projectId) => {
+const leaveProject = async (projectId, nav) => {
   const response = await fetch(`${domain}/leaveProject/${projectId}`, {
     method: 'GET',
     credentials: 'include',
@@ -80,12 +83,13 @@ const leaveProject = async (projectId) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.href("/toMain")
+    nav("/main", { replace: true });
+    nav(0);
   }
 
 };
 
-const createProject = async (projectId, desc) => {
+const createProject = async (projectId, desc, nav) => {
   const response = await fetch(`${domain}/create_project/${projectId}`, {
     method: 'POST',
     credentials: 'include',
@@ -98,7 +102,8 @@ const createProject = async (projectId, desc) => {
   });
   const data = await response.json();
   if (data.message == "success") {
-    window.location.href("/toMain")
+    nav("/main", { replace: true });
+    nav(0);
   }
 };
 
@@ -120,6 +125,8 @@ function Main() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -154,9 +161,9 @@ function Main() {
       <Navbar logout={handlelogout}></Navbar>
       <div className="createandcapParent">
         <CapacityDisplay hw1cap={100} hw2cap={100} hw1={hw1} hw2={hw2} />
-        <CreateOrJoinProject pm={makePopup} />
+        <CreateOrJoinProject pm={makePopup} navigate={navigate} />
       </div>
-      <Projects data={data} pm={makePopup} />
+      <Projects data={data} pm={makePopup} navigate={navigate} />
       <Dialog open={open} onClose={handleClose}>
         <p>{popupmessage}</p>
         <Button variant="filled" className="formbutton" onClick={handleClose}>
@@ -176,17 +183,17 @@ const CapacityDisplay = ({ hw1cap, hw2cap, hw1, hw2 }) => {
   )
 }
 
-const CreateOrJoinProject = ({ pm }) => {
+const CreateOrJoinProject = ({ pm, navigate }) => {
   const [pid, setPid] = useState("");
   const [desc, setDesc] = useState("");
 
 
   const handleCreate = async () => {
-    await createProject(pid, desc);
+    await createProject(pid, desc, navigate);
   };
 
   const handleJoin = async () => {
-    await joinProject(pid);
+    await joinProject(pid, navigate);
   };
 
   return (
@@ -223,13 +230,13 @@ const CreateOrJoinProject = ({ pm }) => {
   );
 };
 
-const Projects = ({ data, pm }) => {
+const Projects = ({ data, pm, navigate }) => {
   return (
     <div className="projectPane">
       <h2>Projects</h2>
       {data.map((project, index) => (
         <React.Fragment key={index}>
-          <ProjectInfo pname={project.projectName} list={project.users} pm={pm} data={project} />
+          <ProjectInfo pname={project.projectName} list={project.users} pm={pm} data={project} navigate={navigate} />
         </React.Fragment>
       ))}
     </div>
@@ -238,7 +245,7 @@ const Projects = ({ data, pm }) => {
 
 
 
-const ProjectInfo = ({ pname, list, pm, data }) => {
+const ProjectInfo = ({ pname, list, pm, data, navigate }) => {
   return (
     <>
       <div className="listParent">
@@ -250,31 +257,33 @@ const ProjectInfo = ({ pname, list, pm, data }) => {
           <UserList list={list} />
         </div>
         <div className="list">
-          <ItemManipulation hname="HWSet1" capacity="100" projname={pname} pm={pm} data={data} />
+          <ItemManipulation hname="HWSet1" capacity="100" projname={pname} pm={pm} data={data} navigate={navigate} />
         </div>
         <div className="list">
-          <ItemManipulation hname="HWSet2" capacity="100" projname={pname} pm={pm} data={data} />
+          <ItemManipulation hname="HWSet2" capacity="100" projname={pname} pm={pm} data={data} navigate={navigate} />
         </div>
         <div className="list">
-          <Leave pid={pname} pm={pm} />
+          <Leave pid={pname} pm={pm} navigate={navigate} />
         </div>
       </div>
     </>
   );
 }
 
-const ItemManipulation = ({ projname, hname, capacity, pm, data }) => {
+const ItemManipulation = ({ projname, hname, capacity, pm, data, navigate }) => {
   const [qty, setQty] = useState(0);
   const [checked, setChecked] = useState(0);
 
+
+
   const handleCheckIn = async () => {
-    const message = await checkInHardware(hname, projname, qty);
+    const message = await checkInHardware(hname, projname, qty, navigate);
     pm(message);
     setChecked(checked - qty);
   };
 
   const handleCheckOut = async () => {
-    const message = await checkOutHardware(hname, projname, qty);
+    const message = await checkOutHardware(hname, projname, qty, navigate);
     pm(message);
     setChecked(checked + qty);
   };
@@ -291,9 +300,9 @@ const ItemManipulation = ({ projname, hname, capacity, pm, data }) => {
   );
 }
 
-const Leave = ({ pm, pid }) => {
+const Leave = ({ pm, pid, navigate }) => {
   const handleClick = async () => {
-    await leaveProject(pid);
+    await leaveProject(pid, navigate);
   }
   return (
     <>
