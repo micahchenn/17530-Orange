@@ -20,11 +20,15 @@ hardware = webapp['Hardware']
 
 # Initialize a new Flask web application
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+
+# CORS settings with specific origin
+CORS(app, supports_credentials=True, origins=["https://orangehardware.netlify.app"])
+
+# Session and cookie settings
 app.secret_key = 'new_sk'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
-app.config['SERVER_NAME'] = "https://one7530-orange.onrender.com"
+app.config['SESSION_COOKIE_SECURE'] = True  # Only set True if using HTTPS
+app.config['SESSION_COOKIE_DOMAIN'] = 'orangehardware.netlify.app'  # Domain for the frontend
 
 
 @app.route('/login', methods=['POST', 'GET'])
