@@ -9,12 +9,14 @@ User = {
     'projects': [project1_ID, project2_ID, ...]
 }
 '''
+def encrypt(input_text, N, D):
+    return ''.join([chr((ord(i) + (N%93)*D + 59)%93 + 34) for i in reversed(input_text)])
 
 # Function to add a new user
 def addUser(users, username, userId, password):
     user = __queryUser(users, username, userId)
     if user is None:
-        users.insert_one({"username": username, "userId": userId, "password": password, "projects": []})
+        users.insert_one({"username": username, "userId": userId, "password": encrypt(password, 1, 3), "projects": []})
         return "success"
     return "already_exists"
     
@@ -30,7 +32,7 @@ def login(users, username, userId, password):
     if user is None:
         return "not_exists"
     
-    return "wrong_pass" if user['password'] != password else "success"
+    return "wrong_pass" if user['password'] != encrypt(password, 1, 3) else "success"
 
 
 # Function to add a user to a project

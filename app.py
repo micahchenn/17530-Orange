@@ -104,7 +104,6 @@ def check_in(hwId, projectId, qty):
 @app.route('/')
 @app.route('/main')
 def serve_react():
-    print('\n\n\n\nWE GET TO MAIN\n\n\n\n')
     return send_from_directory(app.static_folder, 'index.html')
 
 
