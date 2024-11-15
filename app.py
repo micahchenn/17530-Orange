@@ -102,8 +102,9 @@ def check_in(hwId, projectId, qty):
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
 @app.route('/')
-@app.route('/<path:path>')
+@app.route('/main')
 def serve_react():
+    print('\n\n\n\nWE GET TO MAIN\n\n\n\n')
     return send_from_directory(app.static_folder, 'index.html')
 
 
