@@ -31,6 +31,12 @@ def login(users, username, userId, password):
     user = __queryUser(users, username, userId)
     if user is None:
         return "not_exists"
+
+    if userId == '' or userId.contains(" "):
+        return "invalid_username"
+    
+    if password == '' or password.contains(' '):
+        return 'invalid_pass'
     
     return "wrong_pass" if user['password'] != encrypt(password, 1, 3) else "success"
 
