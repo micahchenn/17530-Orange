@@ -16,6 +16,13 @@ def encrypt(input_text, N, D):
 def addUser(users, username, userId, password):
     user = __queryUser(users, username, userId)
     if user is None:
+
+        if userId == '' or userId.contains(" "):
+            return "invalid_username"
+    
+        if password == '' or password.contains(' '):
+            return 'invalid_pass'
+    
         users.insert_one({"username": username, "userId": userId, "password": encrypt(password, 1, 3), "projects": []})
         return "success"
     return "already_exists"
