@@ -17,10 +17,10 @@ def addUser(users, username, userId, password):
     user = __queryUser(users, username, userId)
     if user is None:
 
-        if userId == '' or userId.contains(" "):
+        if userId == '' or ' ' in userId:
             return "invalid_username"
     
-        if password == '' or password.contains(' '):
+        if password == '' or ' ' in password:
             return 'invalid_pass'
     
         users.insert_one({"username": username, "userId": userId, "password": encrypt(password, 1, 3), "projects": []})
@@ -39,10 +39,10 @@ def login(users, username, userId, password):
     if user is None:
         return "not_exists"
 
-    if userId == '' or userId.contains(" "):
+    if userId == '' or ' ' in userId:
         return "invalid_username"
     
-    if password == '' or password.contains(' '):
+    if password == '' or ' ' in password:
         return 'invalid_pass'
     
     return "wrong_pass" if user['password'] != encrypt(password, 1, 3) else "success"
