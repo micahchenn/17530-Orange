@@ -8,8 +8,8 @@ import Navbar from './navbar.js';
 import { useNavigate } from 'react-router-dom'
 
 
-const domain = `https://app-orange-hardware-b474fc6fdc47.herokuapp.com`;
-//const domain = `http://localhost:5000`;
+//const domain = `https://app-orange-hardware-b474fc6fdc47.herokuapp.com`;
+const domain = `http://localhost:5000`;
 
 
 const checkInHardware = async (hwId, projectId, qty) => {
@@ -93,7 +93,7 @@ const createProject = async (projectId, desc) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      description : desc
+      description: desc
     }),
   });
   const data = await response.json();
@@ -133,7 +133,7 @@ function Main() {
       const data = await res.json();
       return data;
     }
-  
+
     fetchData().then((data) => {
       console.log(data);
       setData(data.projects);
@@ -143,7 +143,7 @@ function Main() {
       console.error("Error fetching data:", error);
     });
   }, []);
-  
+
 
   const handlelogout = async () => {
     await logout();
