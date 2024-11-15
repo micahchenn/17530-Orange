@@ -27,10 +27,6 @@ app.config['SESSION_COOKIE_SECURE'] = True  # Use True if using HTTPS
 app.config['SERVER_NAME'] = "app-orange-hardware-b474fc6fdc47.herokuapp.com"
 #app.config['SERVER_NAME'] = 'localhost:5000'
 
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
 @app.route('/login', methods=['POST'])
 def login():
     # Extract data from request
@@ -105,16 +101,10 @@ def check_in(hwId, projectId, qty):
     message = pdb.checkInHW(webapp, projectId,hwId, int(qty))
     return jsonify({"qty": f"{qty}", "pid": f"{projectId}", 'message': message})
 
-
-@app.route('/main', methods=['GET'])
-def main():
-    return send_from_directory(app.static_folder, 'main.js')
-
-@app.route('/login', methods=['GET'])
-def lgn():
-    return send_from_directory(app.static_folder, 'login.js')
-
-
+@app.route('/')
+@app.route('/<path:path>')
+def serve_react():
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 # Main entry point for the application
